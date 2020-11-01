@@ -1,5 +1,7 @@
-import React from "react";
+import React, {useContext} from "react";
+//useCoontext - один из видов хуков
 import PropTypes from "prop-types";
+import Context from '../context';
 
 const styles = {
     li: {
@@ -17,12 +19,13 @@ const styles = {
 }
 //можно передать вместо todo пропс и вернуть props.todo.title
 function TodoItem({ todo, index, onChange }) {
+    const { removeToDo } = useContext(Context);
+    //получили функцию removeTodo
     const classes = [];
     if (todo.completed){
         classes.push('done')
     }
   return (
-      
     <li style = {styles.li}>
       <span className = {classes.join('')}>
         <input type="checkbox" style = {styles.input} onChange={() => onChange(todo.id)} checked={todo.completed}/>
@@ -30,7 +33,8 @@ function TodoItem({ todo, index, onChange }) {
         &nbsp;
         {todo.title}
       </span>
-      <button className='rm'>&times;</button>
+      <button className='rm' onClick={() => removeToDo(todo.id)}>&times;</button>
+      {/* <button className='rm' onClick={removeToDo(null, todo.id -- это тоже сработает! подтянем контекст)}>&times;</button> */}
     </li>
   );
 }
