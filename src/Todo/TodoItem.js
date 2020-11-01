@@ -15,7 +15,7 @@ const styles = {
         marginRight: '1 rem',
     }
 }
-//можно передать пропс и вернуть props.todo.title
+//можно передать вместо todo пропс и вернуть props.todo.title
 function TodoItem({ todo, index, onChange }) {
     const classes = [];
     if (todo.completed){
