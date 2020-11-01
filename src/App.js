@@ -1,6 +1,7 @@
 import React from "react";
 import TodoList from "./Todo/TodoList"; //импорт нашего компонента
 import Context from "./context";
+import AddTodo from "./Todo/AddTodo";
 
 function App() {
   //useState - is a hook!
@@ -29,11 +30,21 @@ function App() {
     setTodos(todos.filter(todo => todo.id !== id))
   }//функция по удалению по ИД
 
+function addTodo(title){
+  setTodos(todos.concat([{
+    title: title,
+    id: Date.now(),
+    completed: false,
+  }]))
+}
+
+
   return (
     <Context.Provider value={{removeToDo}}>
       {/* выше запись эквивалентна removeToDo: removeToDo - мы передаем объект */}
       <div className="wrapper">
         <h1>React - tutorial</h1>
+        <AddTodo onCreate = {addTodo}/>
         {todos.length ?<TodoList todos={todos} onToggle={toggleToDo} /> : <p>Nothing to do!</p>}
         
         {/* above we inserted our external component. Мы передали в Тудулист свойство тудус с нашим массивом */}
