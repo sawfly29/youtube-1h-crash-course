@@ -1,4 +1,5 @@
-import React from "react";
+import React, {useEffect} from "react";
+//useEffect используется, когда надо отследить готовность ДОМ-дерева
 import TodoList from "./Todo/TodoList"; //импорт нашего компонента
 import Context from "./context";
 import AddTodo from "./Todo/AddTodo";
@@ -7,13 +8,21 @@ function App() {
   //useState - is a hook!
   //useState returns an array (state) and a function to modify this array
   //variable ---destrucuturization of array
-  const [todos, setTodos] = React.useState([
-    { id: 1, completed: false, title: "buy some bread" },
-    { id: 2, completed: true, title: "buy some milk" },
-    { id: 3, completed: false, title: "buy some maslou" },
-  ]);
-
+  const [todos, setTodos] = React.useState([]);
+     //{ id: 1, completed: false, title: "buy some bread" },
+    // { id: 2, completed: true, title: "buy some milk" },
+    // { id: 3, completed: false, title: "buy some maslou" },
+ 
   //данный массив, по факту, является стейтом то есть если где-то что-то меняем, то надо поменять сам стейт
+
+
+  useEffect(()=> {
+    fetch('https://jsonplaceholder.typicode.com/todos?_limit=5')
+    .then(response => response.json())
+    .then(
+      todos => {setTimeout(() => {setTodos(todos) }, 2000)})
+  }, [])
+  //пустой массив- это список зависимостей для отработки данному коллбэку
 
   function toggleToDo(id) {
     setTodos(

@@ -1,15 +1,30 @@
-import React, {useState} from 'react'
-import PropTypes from 'prop-types'
+import React, {useState} from 'react';
+import PropTypes from 'prop-types';
 //еще хук - useState
+
+//создадим наш новый зук сами:
+function useInputValue(defaultValue=''){ 
+    //setValue - стандартный метод в реакте
+     const [value, setValue] = useState(defaultValue);
+
+     return {
+         bind: {value, 
+         onChange: event => setValue(event.target.value)},
+         clear: ()=> setValue(''),
+         value: ()=> value,
+     }
+}
+
+
 function AddTodo({onCreate}){
-      const [value, setValue]  = useState('')
-      //setValue - стандартный метод в реакте
+    
+     const input = useInputValue('')
 
       function submitHandler(event){
           event.preventDefault();
-          if (value.trim()){
-              onCreate(value);
-              setValue('');
+          if (input.value().trim()){
+              onCreate(input.value());
+              input.clear();
           }
       }
 
@@ -17,7 +32,7 @@ function AddTodo({onCreate}){
     return(
       
         <form style = { {marginBottom: '1rem'}} onSubmit = {submitHandler}>
-            <input value={value} onChange = {event => setValue(event.target.value)}/>
+            <input {...input.bind}/>
             <button type='submit'>Add ToDo</button>
         </form>
     )
