@@ -3,6 +3,7 @@ import React, {useEffect} from "react";
 import TodoList from "./Todo/TodoList"; //импорт нашего компонента
 import Context from "./context";
 import AddTodo from "./Todo/AddTodo";
+import Loader from './Loader';
 
 function App() {
   //useState - is a hook!
@@ -14,13 +15,18 @@ function App() {
     // { id: 3, completed: false, title: "buy some maslou" },
  
   //данный массив, по факту, является стейтом то есть если где-то что-то меняем, то надо поменять сам стейт
+  //в аргументе к стейту указываем, какое именно значение по умолчанию будет у стейта
 
+const [loading, setLoading] = React.useState(true);
+  //another one state
 
   useEffect(()=> {
     fetch('https://jsonplaceholder.typicode.com/todos?_limit=5')
     .then(response => response.json())
     .then(
-      todos => {setTimeout(() => {setTodos(todos) }, 2000)})
+      todos => {setTimeout(() => {setTodos(todos);
+        setLoading(false)
+      }, 2000)})
   }, [])
   //пустой массив- это список зависимостей для отработки данному коллбэку
 
@@ -54,7 +60,9 @@ function addTodo(title){
       <div className="wrapper">
         <h1>React - tutorial</h1>
         <AddTodo onCreate = {addTodo}/>
-        {todos.length ?<TodoList todos={todos} onToggle={toggleToDo} /> : <p>Nothing to do!</p>}
+        {loading && <Loader />}
+
+        {todos.length ?<TodoList todos={todos} onToggle={toggleToDo} /> : (loading ? null : 'Nothing to do!')}
         
         {/* above we inserted our external component. Мы передали в Тудулист свойство тудус с нашим массивом */}
       </div>
