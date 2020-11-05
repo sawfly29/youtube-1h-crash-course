@@ -2,8 +2,14 @@ import React, {useEffect} from "react";
 //useEffect используется, когда надо отследить готовность ДОМ-дерева
 import TodoList from "./Todo/TodoList"; //импорт нашего компонента
 import Context from "./context";
-import AddTodo from "./Todo/AddTodo";
+//import AddTodo from "./Todo/AddTodo"; 
+//- пробуем загрузить лениво - то есть подгрузка компонента не сразу и полностью, а по мере необходимости
 import Loader from './Loader';
+import Modal from './Modal/Modal'
+
+const AddTodo = React.lazy(()=> new Promise(resolve => 
+  setTimeout(() => {resolve(import('./Todo/AddTodo'))}, 3000)
+  ));//имитация загрузки с сервера 
 
 function App() {
   //useState - is a hook!
@@ -58,8 +64,13 @@ function addTodo(title){
     <Context.Provider value={{removeToDo}}>
       {/* выше запись эквивалентна removeToDo: removeToDo - мы передаем объект */}
       <div className="wrapper">
-        <h1>React - tutorial</h1>
-        <AddTodo onCreate = {addTodo}/>
+        <h1>React - tutorial</h1> 
+        <Modal />
+        <React.Suspense fallback={<p>Loading.....</p>}>
+         
+          <AddTodo onCreate = {addTodo}/>
+        </React.Suspense>
+        {/* суспенс нужен для работы с ленивой загрузкой. Вместо лоадинга можно анимашку с лоадером передать */}
         {loading && <Loader />}
 
         {todos.length ?<TodoList todos={todos} onToggle={toggleToDo} /> : (loading ? null : 'Nothing to do!')}
